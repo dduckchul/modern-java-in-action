@@ -131,3 +131,55 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 * 생성자, 배열 생성자, super 호출 등에 사용하는 특별한 메서드 참조도 있음
 
 
+## 람다 표현식을 조합할 수 있는 유용한 메서드 - default method
+* Comparator 조합
+  * 역정렬 (reversed)
+  * 정렬 거꾸로 하고싶다면? 새로 만들 필요없음
+  * 인터페이스에서 비교자의 순서를 뒤바꾸는 reversed를 지원함.
+  ``` 
+  // 비교자 구현 재사용 해서 역순 정렬 구현
+  inventory.sort(comparing(Apple::getweight).reversed())
+  ```
+* Comparator 연결
+  * 무게가 같은 두 사과가 존재할경우?
+  * 비교 결과를 다듬을 수 있는 두번째 comparator 만든다
+  * thenComparing 은 첫번째가 같다고 판단되면 두번째 비교자에 전달한다.
+  ```
+  // 같을경우 두번째 비교자에 전달
+  inventory.sort(
+    comparing(Apple::getWeight())
+      .reversed()
+      .thenComparing(Apple::getCountry)
+    )
+  ```
+
+* Predicate 조합
+  * negate (기존 프레디케이트 결과 반전), or, and를 지원
+  * 단순한 람다표현식으로 복잡한 Predicate 만들 수 있다.
+
+* Function 조합
+  * andThen, compose 두가지 디폴트 메서드 제공
+  ```
+  Function<Integer, Integer> f = x -> x + 1
+  Function<Integer, Integer> g = x -> x * 2
+  Function<Integer, Integer> h = f.andThen(g)
+  int result = h.apply(1) // g(f(x))를 수행, 4 반환
+
+  Function<Integer, Integer> h2 = f.compose(g)
+  int result = h2.apply(1) // f(g(x))를 수행, 3 반환
+  ```
+
+## 비슷한 수학적 개념은 넘깁시다 후후
+
+### 마무리
+* 람다 표현식은 익명 함수의 일종, 이름은 없지만 파라미터, 바디, 반환값을 가지며 예외를 던질 수 있다.
+* 람다 표현식으로 간결한 코드를 만들 수 있다.
+* 함수형 인터페이스는 하나의 추상 메서드만을 정의하는 인터페이스이다.
+* 함수형 인터페이스를 기대하는 곳에서만 람다 표현식을 사용 가능하다.
+* 람다 표현식을 이용해서 함수형 인터페이스의 추상 메서드를 즉석으로 제공 할 수 있다.
+* 람다 표현식 전체가 함수형 인터페이스의 인스턴스로 취급된다
+* java.util.function 패키지는 자주 사용하는 다양한 함수형 인터페이스를 제공한다.
+* 박싱 동작을 피할 수 있는 기본형 특화 인터 페이스를 제공한다.
+* 실행 어라운드 패턴을 사용하면 유연성과 재사용성을 추가로 얻을 수 있다.
+* 메서드 참조를 사용하면 기존의 메서드 구현을 재사용하고 직접 전달할 수 있다.
+* Comparator, Predicate, Function 같은 함수형 인터페이스는 람다 표현식을 조합할 수 있는다양한 디폴트 메서드를 제공한다.

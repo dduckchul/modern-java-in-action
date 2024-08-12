@@ -6,7 +6,7 @@
 * 간결성 - 익명 클래스처럼 자질구레한 코드를 구현할 필요가 없다.
 ### 결론적으로 코드가 간결하고 유연해 진다
 
-``` 
+``` java
 // comparator 객체
 Comparator<Apple> = new Comparator<Apple>() {
     public int compare(Apple a1, Apple a2) {
@@ -43,8 +43,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 * 설정과 정리 작업은 비슷하다
 * try-with-resources로 예제 구행
 
-
-```
+``` java
   public static String processFileLimited() throws IOException {
     try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
       return br.readLine();
@@ -57,7 +56,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 
 2. 함수형 인터페이스 사용해서 동작 전달할것
   * 함수형 인터페이스 자리에 람다를 사용할 수 있다.
-``` 
+``` java
   public interface BufferedReaderProcessor {
 
     String process(BufferedReader b) throws IOException;
@@ -66,7 +65,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 ```
 3. 동작 실행
 * bufferedReader를 스트링으로 반환하는 시그니쳐를 만들었기 때문에, 일치하는 람다를 전달 할 수 있다.
-```
+``` java
   public static String processFile(BufferedReaderProcessor p) throws IOException {
     try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
       return p.process(br);
@@ -76,7 +75,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 
 4. 람다 전달
 * 이제 한 코드로 유연하게 두개의 실행을 처리할 수 있음
-```
+``` java
     String oneLine = processFile((BufferedReader b) -> b.readLine());
     System.out.println(oneLine);
 
@@ -116,7 +115,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 ## 메서드 참조
 * 기존의 메서드 정의를 재활용 하여 람다를 사용할 수 있다.
 * 떄로는 람다보다 메서드 참조하는게 훨씬 좋을 수 있음
-```
+``` java
     inventory.sort((a1, a2) -> a1.getWeight() - a2.getWeight());
 
     inventory.sort(comparing(Apple::getWeight));
@@ -136,7 +135,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
   * 역정렬 (reversed)
   * 정렬 거꾸로 하고싶다면? 새로 만들 필요없음
   * 인터페이스에서 비교자의 순서를 뒤바꾸는 reversed를 지원함.
-  ``` 
+  ``` java
   // 비교자 구현 재사용 해서 역순 정렬 구현
   inventory.sort(comparing(Apple::getweight).reversed())
   ```
@@ -144,7 +143,7 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
   * 무게가 같은 두 사과가 존재할경우?
   * 비교 결과를 다듬을 수 있는 두번째 comparator 만든다
   * thenComparing 은 첫번째가 같다고 판단되면 두번째 비교자에 전달한다.
-  ```
+  ``` java
   // 같을경우 두번째 비교자에 전달
   inventory.sort(
     comparing(Apple::getWeight())
@@ -159,14 +158,14 @@ Comparator<Apple> byWeight = (Apple a2, Apple a2) -> a1.getWeight.compareTo(a2.g
 
 * Function 조합
   * andThen, compose 두가지 디폴트 메서드 제공
-  ```
-  Function<Integer, Integer> f = x -> x + 1
-  Function<Integer, Integer> g = x -> x * 2
-  Function<Integer, Integer> h = f.andThen(g)
-  int result = h.apply(1) // g(f(x))를 수행, 4 반환
+  ``` java
+  Function<Integer, Integer> f = x -> x + 1;
+  Function<Integer, Integer> g = x -> x * 2;
+  Function<Integer, Integer> h = f.andThen(g);
+  int result = h.apply(1); // g(f(x))를 수행, 4 반환
 
-  Function<Integer, Integer> h2 = f.compose(g)
-  int result = h2.apply(1) // f(g(x))를 수행, 3 반환
+  Function<Integer, Integer> h2 = f.compose(g);
+  int result = h2.apply(1); // f(g(x))를 수행, 3 반환
   ```
 
 ## 비슷한 수학적 개념은 넘깁시다 후후
